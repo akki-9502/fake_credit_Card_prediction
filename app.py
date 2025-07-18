@@ -1,20 +1,20 @@
 import streamlit as st
-import pandas as pd
-import pickle  # or joblib, depending on how your model was saved
+import pickle
 
-# Load the trained model (update path as needed)
-model = pickle.load(open('model.pkl', 'rb'))  # Make sure you save your model to this file
+# Load model
+with open("model.pkl", "rb") as f:
+    model = pickle.load(f)
 
 st.title("Fake Credit Card Detection")
+st.subheader("Enter transaction details")
 
-# Input form
-st.subheader("Enter transaction details:")
-feature_1 = st.number_input("Feature 1")
-feature_2 = st.number_input("Feature 2")
-# Add as many inputs as your model requires...
+v1 = st.number_input("V1")
+v2 = st.number_input("V2")
+amount = st.number_input("Amount")
+
+input_data = [[v1, v2, amount]]  # Must match the model's training feature order
 
 if st.button("Detect"):
-    input_data = [[feature_1, feature_2]]  # Add all features in the correct order
     prediction = model.predict(input_data)
     if prediction[0] == 1:
         st.error("⚠️ Fraudulent transaction detected!")
