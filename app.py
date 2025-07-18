@@ -1,21 +1,29 @@
 import streamlit as st
 import pickle
 
-# Load model
+# List of input features your model expects
+features = [
+    'V1', 'V2', 'V3', 'V4', 'V5', 'V6', 'V7', 'V8', 'V9', 'V10',
+    'V11', 'V12', 'V13', 'V14', 'V15', 'V16', 'V17', 'V18', 'V19', 'V20',
+    'V21', 'V22', 'V23', 'V24', 'V25', 'V26', 'V27', 'V28', 'scaled_amount'
+]
+
+# Load trained model
 with open("model.pkl", "rb") as f:
     model = pickle.load(f)
 
-st.title("Fake Credit Card Detection")
-st.subheader("Enter transaction details")
+st.title("💳 Fake Credit Card Transaction Detection")
+st.subheader("Enter transaction details below:")
 
-v1 = st.number_input("V1")
-v2 = st.number_input("V2")
-amount = st.number_input("Amount")
+# Collect user input for all features
+user_inputs = []
+for feature in features:
+    val = st.number_input(f"{feature}", format="%.5f")
+    user_inputs.append(val)
 
-input_data = [[v1, v2, amount]]  # Must match the model's training feature order
-
+# Predict on button click
 if st.button("Detect"):
-    prediction = model.predict(input_data)
+    prediction = model.predict([user_inputs])
     if prediction[0] == 1:
         st.error("⚠️ Fraudulent transaction detected!")
     else:
